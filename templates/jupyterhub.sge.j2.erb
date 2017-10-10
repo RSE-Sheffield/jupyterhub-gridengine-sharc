@@ -1,0 +1,31 @@
+#!/bin/bash
+#$ -j y
+#$ -wd {{ working_dir }}
+#$ -N jupyterhub
+#$ -l h_rt=04:00:00
+{% if user_options.project and user_options.project|first != "default" %}
+#$ -P {{ user_options.project|first }}
+{% endif %}
+{% if user_options.queue and user_options.queue|first != 'any' %}
+#$ -q {{ user_options.queue|first }}
+{% endif %}
+{% if user_options.ram %}
+#$ -l rmem={{ user_options.ram|first }}G
+{% endif %}
+{% if user_options.pe and user_options.pe|first != "none" %}
+#$ -pe {{ user_options.pe|first }} {{ user_options.slots|first }}
+{% endif %}
+{% if user_options.gpus and user_options.gpus|first|int > 1 %}
+#$ -l gpu={{ user_options.gpus|first }}
+{% endif %}
+{% if user_options.email and user_options.email|first != '' %}
+#$ -m ea 
+#$ -M {{ user_options.email|first }}
+{% endif %}
+<% if @is_devel_env -%>#$ -now y<% end %>
+# {{ user_options }}
+
+source /etc/profile.d/modules.sh
+module load apps/python/conda
+source activate jupyterhub
+python -m jupyterhub.singleuser {{ jh_args }}

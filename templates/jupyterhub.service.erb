@@ -1,0 +1,45 @@
+# vi:syntax=systemd
+[Unit]
+Description=JupyterHub
+Documentation=https://github.com/RSE-Sheffield/odk-jh-sge/
+After=syslog.target network.target
+
+[Service]
+# The process configured with ExecStart= is the main process of the service
+Type=simple
+
+# Set the UNIX user or group that the processes are executed as
+User=jupyter
+Group=jupyter
+
+#ExecStartPre=
+ExecStart=<%= @conda_root -%>/envs/<%= @conda_env -%>/bin/jupyterhub --config=<%= @jh_cfg_dir -%>/jupyterhub_config.py 2>&1
+Restart=no
+#ExecStop=
+#ExecReload=
+
+# Environment variables for executed processes
+Environment="PATH=<%= @conda_root -%>/envs/<%= @conda_env -%>/bin:<%= @conda_root -%>/bin:/usr/local/sge/live/bin/lx-amd64:/usr/local/bin:/usr/bin"
+Environment="CONDA_PREFIX=<%= @conda_root -%>/envs/<%= @conda_env -%>"
+Environment="CONDA_DEFAULT_ENV=<%= @conda_env -%>"
+Environment="SGE_ROOT=/usr/local/sge/live"
+Environment="SGE_CLUSTER_NAME=sharc"
+
+# Mount /usr, /boot and /etc read-only, except for the API file system
+# subtrees /dev, /proc and /sys
+ProtectSystem=full
+
+# Ideally we'd use 'ProtectHome=yes' to make /home, /root and /run/user inaccessible and
+# empty to this service; however, qsub would then fail as it would annoyingly error when trying
+# to read '$HOME/.sge_aliases'.  An alternative would be 'ProtectHome=read-only' but this
+# prevents us from writing error logs to users' home directories.  We therefore need:
+ProtectHome=no
+
+# Sets up a new file system namespace for the executed processes and mounts
+# private /tmp and /var/tmp directories inside it that is not shared by
+# processes outside of the namespace.  All temporary files created by a service
+# in these directories will be removed after the service is stopped.
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

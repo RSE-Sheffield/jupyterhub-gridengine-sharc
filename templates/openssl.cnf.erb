@@ -1,0 +1,20 @@
+[ req ]
+prompt              = no
+default_bits        = 2048
+distinguished_name  = req_distinguished_name
+req_extensions      = req_ext
+[ req_distinguished_name ]
+countryName         = GB
+stateOrProvinceName = South Yorkshire
+localityName        = Sheffield
+organizationName    = University of Sheffield
+commonName          = <%= @fqdn %>
+[ req_ext ]
+subjectAltName      = @alt_names
+[alt_names]
+DNS.1               = <%= @hostname -%>.shef.ac.uk
+DNS.2               = <%= @hostname -%>.sheffield.ac.uk
+<% unless @is_devel_env %>  
+DNS.3               = jupyter-sharc.sheffield.ac.uk
+DNS.4               = jupyter-sharc.shef.ac.uk
+<% end %>  

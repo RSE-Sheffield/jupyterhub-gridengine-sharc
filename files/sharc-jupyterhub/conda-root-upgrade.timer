@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily upgrade of root conda envirionment
+Documentation=
+
+[Timer]
+OnCalendar=weekly
+Persistent=true  
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

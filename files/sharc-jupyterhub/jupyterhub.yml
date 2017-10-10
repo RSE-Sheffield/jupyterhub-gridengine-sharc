@@ -1,0 +1,14 @@
+channels:
+- defaults
+- conda-forge
+dependencies:
+- python=3.5
+- requests
+- sqlalchemy
+- jupyter=1.0.0
+- configurable-http-proxy=2.0.2
+- jupyterhub=0.7.2
+- nb_conda=2.2.0
+- nb_conda_kernels=2.1.0
+- pip:
+  - sgespawner==0.2.1

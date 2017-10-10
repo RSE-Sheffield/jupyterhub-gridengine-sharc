@@ -1,0 +1,15 @@
+[Unit]
+Description=Upgrade the root conda environment
+Documentation=
+DefaultDependencies=no
+Conflicts=shutdown.target
+After=systemd-readahead-collect.service systemd-readahead-replay.service local-fs.target time-sync.target
+Before=shutdown.target
+
+[Service]
+Type=oneshot
+ExecStartPre=/usr/bin/which conda
+ExecStartPre=<%= @conda_root -%>/bin/conda update --all --quiet --yes --update-dependencies --dry-run
+ExecStart=<%= @conda_root -%>/bin/conda update --all --quiet --yes --update-dependencies
+Environment="PATH=<%= @conda_root -%>/conda/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
+IOSchedulingClass=idle
