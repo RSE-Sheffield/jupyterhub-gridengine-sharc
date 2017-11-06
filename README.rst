@@ -8,6 +8,7 @@ satisfy user-specified resource requests.
 .. contents:: 
     :depth: 2
 
+
 Introduction
 ------------
 
@@ -103,23 +104,33 @@ This parameterisation allows:
   kept out of version control.
 
 The parameters, their defaults as defined in the class and details of how in Foreman they are 
-overriden per host or host class:
+overridden per host or host class:
 
-+====================+==========================================================================+====================================+=======================+
-| Parameter          | Description                                                              | Default                            | Overridden in Foreman |
-+====================+==========================================================================+====================================+=======================+
-| is_devel_env       | Boolean                                                                  | False                              | per host              |
-| cluster_net_cidr   | Network (in CIDR format) on which cluster-facing interface is listening  | -                                  | for class             |
-| public_net_cidr    | Network (in CIDR format) on which Internet-facing interface is listening | -                                  | for class             |
-| file_cache         | Where to store installers                                                | '/usr/local/media'                 | -                     |
-| py_vers            | Version of Python to use                                                 | 3                                  | -                     |
-| miniconda_vers     | Version of Miniconda to use                                              | '4.3.11'                           | -                     |
-| miniconda_dl_md5   | Miniconda installer checksum                                             | '1924c8d9ec0abf09005aa03425e9ab1a' | -                     |
-| conda_root         | Where to install Miniconda                                               | '/usr/local/packages/apps/conda'   | -                     |
-| conda_env          | Name of JupyterHub conda environment                                     | 'jupyterhub'                       | -                     |
-| jh_admin_users     | List of JupyterHub administrators                                        | -                                  | for class             |
-| jh_whitelist_users | Whitelist of JupyterHub users (used if is_devel_env is True)             | -                                  | for class             |
-+====================+==========================================================================+====================================+=======================+
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| Parameter              | Description                                                              | Default                                | Overridden in Foreman |
++========================+==========================================================================+========================================+=======================+
+| ``is_devel_env``       | Boolean                                                                  | ``False``                              | per host              |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``cluster_net_cidr``   | Network (in CIDR format) on which cluster-facing interface is listening  | -                                      | for class             |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``public_net_cidr``    | Network (in CIDR format) on which Internet-facing interface is listening | -                                      | for class             |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``file_cache``         | Where to store installers                                                | ``/`usr/local/media``                  | -                     |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``py_vers``            | Version of Python to use                                                 | ``3``                                  | -                     |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``miniconda_vers``     | Version of Miniconda to use                                              | ``4.3.11``                             | -                     |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``miniconda_dl_md5``   | Miniconda installer checksum                                             | ``1924c8d9ec0abf09005aa03425e9ab1a``   | -                     |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``conda_root``         | Where to install Miniconda                                               | ``/usr/local/packages/apps/conda``     | -                     |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``conda_env``          | Name of JupyterHub conda environment                                     | ``jupyterhub``                         | -                     |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``jh_admin_users``     | List of JupyterHub administrators                                        | -                                      | for class             |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
+| ``jh_whitelist_users`` | Whitelist of JupyterHub users (used if ``is_devel_env`` is True)         | -                                      | for class             |
++------------------------+--------------------------------------------------------------------------+----------------------------------------+-----------------------+
 
 Internal logic
 """"""""""""""
@@ -134,7 +145,7 @@ This class does the following:
   the cluster nodes and its JupyterHub hosts using NFS.  
   The same has not been done for ShARC's JupyterHub hosts to 
   reduce the coupling of the JupyterHub hosts; 
-  a conseqeuence is that an identical conda environment must now be set up 
+  a consequence is that an identical conda environment must now be set up 
   on the JupyterHub hosts and the cluster's execution hosts.
 * Ensure that a ``jupyter`` system group and system user exist; 
   ``jupyterhub`` is later run as this unprivileged user;
@@ -254,7 +265,7 @@ Additional Grid Engine Queues/Projects/Complexes
 ------------------------------------------------
 
 The ``sgespawner`` resource request HTML form 
-presents the user with a delibrately limited set of 
+presents the user with a deliberately limited set of 
 the resources that could be requested from ShARC's Grid Engine scheduler.
 
 To add options presented via this form:
@@ -263,10 +274,12 @@ To add options presented via this form:
    the ``jupyterhub_config.py.erb`` Puppet template).  
    Either **add a new HTML Input** to capture a new type of resource request
    or update an HTML Input to e.g. add to the list of discrete options that 
-   can be selected for a given input (e.g to allow an additional Project name to be selected).
+   can be selected for a given input (e.g. to allow an additional Project name to be selected).
 
    For example, here is the part of that string that allows the user to 
-   select between two different cluster queues: ::
+   select between two different cluster queues:
+
+   .. code-block:: html
 
       <h3>Job queue</h3>
       <p>Selecting '<em>any</em>' lets the scheduler choose an appropriate queue
@@ -284,13 +297,15 @@ To add options presented via this form:
    * Jinja 2 templating is used at run-time to 
      conditionally include resource request details 
      extrated from a ``user_options`` object e.g. ::
-   
+
         {% if user_options.queue and user_options.queue|first != 'any' %}
         #$ -q {{ user_options.queue|first }}
         {% endif %}
      
    * Puppet ERB templating could be used by Puppet at install time to 
-     include/exclude content e.g. ::
+     include/exclude content e.g.
+
+     .. code-block:: erb
 
         <% if @is_devel_env -%>#$ -l special_new_feature=1<% end %>
 
@@ -310,7 +325,7 @@ To add options presented via this form:
    the scheduler is free to select what it considers to be an appropriate queue.
 
 #. Commit your updates to a fork of this repository.
-#. Ensure Puppet and Foreman reprovision this Puppet module on your JupyterHub hosts.
+#. Ensure Puppet and Foreman re-apply this Puppet module on your JupyterHub hosts.
    This should instantiate the two aforementioned ``.erb`` templates and 
    copy the results to the JupyterHub hosts.
 #. Restart the ``jupyterhub`` service on your JupyterHub hosts at a convenient time.
