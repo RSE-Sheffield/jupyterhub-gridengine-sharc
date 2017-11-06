@@ -98,13 +98,6 @@ class jupyterhub::sharc-jupyterhub (
     require     => File["${file_cache}/jupyterhub.yml"],
     refreshonly => true,
   }
-  ## Install SGESpawner python package using pip -> no longer needed as installing SGESpawner using jupyterhub.yml
-  #exec { "install-sgespawner":
-  #  command     => "pip install git+git://https://github.com/willfurnass/sgespawner.git@v0.2.0",
-  #  path        => [ "${conda_root}/envs/jupyterhub/bin", "${conda_root}/bin", '/bin', '/usr/bin' ],
-  #  environment => ["CONDA_PREFIX=${conda_root}/envs/jupyterhub"],
-  #}
-
 
   ########################
   # Users, groups and sudo
