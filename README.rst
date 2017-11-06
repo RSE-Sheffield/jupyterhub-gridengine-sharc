@@ -330,6 +330,16 @@ To add options presented via this form:
    copy the results to the JupyterHub hosts.
 #. Restart the ``jupyterhub`` service on your JupyterHub hosts at a convenient time.
 
+Repo history
+------------
+
+Note that this repository was instantiated from the contents (but not history) of a private Git repository.
+The private repository contains a little confidential information and is used with Foreman to deploy JupyterHub on ShARC.
+Following the creation of this public repository 
+the private repository should only receive new commits by merging in changes from this public repo. 
+
+All new issues re JupyterHub on ShARC / Grid Engine should be raised via this public repo.
+
 .. _Foreman: https://www.theforeman.org/
 .. _Grid Engine: https://arc.liv.ac.uk/trac/SGE
 .. _Jupyter Notebook Extensions: https://docs.continuum.io/anaconda/jupyter-notebook-extensions
