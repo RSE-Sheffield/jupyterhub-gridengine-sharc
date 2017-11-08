@@ -25,6 +25,10 @@
 <% if @is_devel_env -%>#$ -now y<% end %>
 # {{ user_options }}
 
+# Ensure that the single-user Jupyter server doesn't try to write to the inaccessible /run/user/0 directory
+# due to XDG_RUNTIME_DIR being inherited from an environment with euid=0 (https://groups.google.com/forum/#!topic/jupyter/uQ8Jqz4rnu0)
+unset XDG_RUNTIME_DIR
+
 source /etc/profile.d/modules.sh
 module load apps/python/conda
 source activate jupyterhub
