@@ -151,11 +151,11 @@ c.JupyterHub.hub_ip = jh_host_cluster_ip
 ## The port for this process
 c.JupyterHub.hub_port = 8081
 
-## The public facing ip of the whole application (the proxy)
-#c.JupyterHub.ip = jh_host_public_ip
-# NB do not need to listen on a public IP as receiving redirected
-# TCP streams from a local Nginx proxy
-c.JupyterHub.ip = '127.0.0.1'
+## The public facing ip of the whole application (the proxy).
+# Although this service is typically accessed through a Nginx proxy (for port forwarding) 
+# we publicly expose this port to allow the JupyterHub service to be monitored by Nagios.
+# We listen on 0.0.0.0 to allow connections from both localhost and externally from Nagios.
+c.JupyterHub.ip = '0.0.0.0'
 
 ## Supply extra arguments that will be passed to Jinja environment.
 #c.JupyterHub.jinja_environment_options = {}
