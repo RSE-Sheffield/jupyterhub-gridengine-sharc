@@ -237,11 +237,12 @@ class jupyterhub::sharc-jupyterhub (
   service { 'jupyterhub.service':
     ensure    => running,
     enable    => true,
-    subscribe => File[[
-      "${jh_cfg_dir}/jupyterhub_config.py",
-      "${jh_cfg_dir}/jupyterhub.sge.j2",
-      '/etc/systemd/system/jupyterhub.service',
-    ]],
+    # Do not restart JupyterHub service automatically if updated config/service files are deployed
+    #subscribe => File[[
+    #  "${jh_cfg_dir}/jupyterhub_config.py",
+    #  "${jh_cfg_dir}/jupyterhub.sge.j2",
+    #  '/etc/systemd/system/jupyterhub.service',
+    #]],
   }
 
 
