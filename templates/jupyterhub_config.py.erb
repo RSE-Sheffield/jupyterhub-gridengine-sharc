@@ -458,12 +458,14 @@ c.SGESpawner.options_form = """
       <ul>
       <li><strong>gpu</strong>: GPU-equipped nodes (public) </li>
       <li><strong>rse</strong>: Research Software Engineering group's CPU-only nodes (restricted access) </li>
+      <li><strong>rse-training</strong>: For training courses run by the Research Software Engineering group (restricted access) </li>
       <li><strong>insigneo-imsb</strong>: Insigneo Integrative Musculo-Skeletal Biomechanics (IMSB) subgroup's nodes (restricted access) </li>
       <li><strong>cstest</strong>: CiCS testing only </li>
       </ul>
       <select name="project">
         <option value="default">default</option>
         <option value="rse">rse</option>
+        <option value="rse-training">rse-training</option>
         <option value="insigneo-imsb">insigneo-imsb</option>
         <option value="gpu">gpu</option>
         <option value="cstest">cstest</option>
@@ -474,6 +476,9 @@ c.SGESpawner.options_form = """
       (which is typically what you want).</p>
       <select name="queue">
         <option value="any">any</option>
+        <option value="rse.q">rse.q</option>
+        <option value="rse-training.q">rse-training.q</option>
+        <option value="insigneo-imsb.q">insigneo-imsb.q</option>
         <option value="cstest.q">cstest.q</option>
       </select> 
 
