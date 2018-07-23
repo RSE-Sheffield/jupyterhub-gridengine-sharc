@@ -139,7 +139,7 @@ This class does the following:
 
 * Ensures Miniconda_ is installed;
 * Ensures a conda environment exists that includes 
-  the packages specified in ``jupyterhub.yml``, 
+  the packages specified in ``jupyterhub.yml`` (production system) or ``jupyterhub-dev.yml`` (dev system),
   upgrading packages if necessary;
   On the University's Iceberg cluster the root conda environment was shared between 
   the cluster nodes and its JupyterHub hosts using NFS.  

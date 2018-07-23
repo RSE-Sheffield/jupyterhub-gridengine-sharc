@@ -117,7 +117,7 @@ c.JupyterHub.cookie_max_age_days = 5
 c.JupyterHub.cookie_secret_file = pjoin(runtime_dir, 'cookie_secret')
 
 ## The location of jupyterhub data files (e.g. /usr/local/share/jupyter/hub)
-#c.JupyterHub.data_files_path = '/usr/local/packages/apps/conda/envs/jupyterhub/share/jupyter/hub'
+#c.JupyterHub.data_files_path = '/usr/local/packages/apps/conda/envs/<%= @conda_env -%>/share/jupyter/hub'
 
 ## Include any kwargs to pass to the database connection. See
 #  sqlalchemy.create_engine for details.

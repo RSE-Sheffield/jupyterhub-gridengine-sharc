@@ -31,7 +31,7 @@ unset XDG_RUNTIME_DIR
 
 source /etc/profile.d/modules.sh
 module load apps/python/conda
-source activate jupyterhub
+source activate <%= @conda_env -%>
 
 # If a Grid Engine cluster name is defined, a cluster-specific condarc exists and the CONDARC env var is undefined
 if [[ -n $SGE_CLUSTER_NAME ]] && [[ -f $HOME/.condarc-${SGE_CLUSTER_NAME}.yml ]] && [[ -z ${CONDARC+x} ]] ; then

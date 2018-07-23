@@ -9,9 +9,13 @@ class jupyterhub::sharc-jupyterhub (
     $miniconda_vers = '4.3.11',
     $miniconda_dl_md5 = '1924c8d9ec0abf09005aa03425e9ab1a',
     $conda_root = '/usr/local/packages/apps/conda',
-    $conda_env = 'jupyterhub',
   ) {
 
+  if($is_devel_env) {
+    $conda_env = 'jupyterhub-dev'
+  } else {
+    $conda_env = 'jupyterhub'
+  }
 
   ################################
   # Install useful system packages
@@ -75,27 +79,27 @@ class jupyterhub::sharc-jupyterhub (
   #################################################
 
   # Copy over conda environment definition file (which was created using 'conda env export')
-  file { "${file_cache}/jupyterhub.yml":
+  file { "${file_cache}/${conda_env}.yml":
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
-    source  => 'puppet:///modules/jupyterhub/sharc-jupyterhub/jupyterhub.yml',
+    source  => 'puppet:///modules/jupyterhub/sharc-jupyterhub/${conda_env}.yml',
     require => Exec['miniconda-install'],
     notify  => [Exec['conda-env-create'], Exec['conda-env-update']],
   }
   # Only create the conda environment if it doesn't already exist
   exec { 'conda-env-create':
-    command => "conda env create --file=${file_cache}/jupyterhub.yml --name=${conda_env}",
+    command => "conda env create --file=${file_cache}/${conda_env}.yml --name=${conda_env}",
     path    => [ "${conda_root}/bin", '/bin', '/usr/bin' ],
     unless  => "conda env list | grep -q -e \"envs/${conda_env}\$\"",
-    require => File["${file_cache}/jupyterhub.yml"],
+    require => File["${file_cache}/${conda_env}.yml"],
   }
   # If the conda environment definition file changes then update the environment accordingly
   exec { 'conda-env-update':
-    command     => "conda env update --file=${file_cache}/jupyterhub.yml --name=${conda_env}",
+    command     => "conda env update --file=${file_cache}/${conda_env}.yml --name=${conda_env}",
     path        => [ "${conda_root}/bin", '/bin', '/usr/bin' ],
     onlyif      => "conda env list | grep -q -e \"envs/${conda_env}\$\"",
-    require     => File["${file_cache}/jupyterhub.yml"],
+    require     => File["${file_cache}/${conda_env}.yml"],
     refreshonly => true,
   }
 
