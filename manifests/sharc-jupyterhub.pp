@@ -83,7 +83,7 @@ class jupyterhub::sharc-jupyterhub (
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
-    source  => 'puppet:///modules/jupyterhub/sharc-jupyterhub/${conda_env}.yml',
+    source  => "puppet:///modules/jupyterhub/sharc-jupyterhub/${conda_env}.yml",
     require => Exec['miniconda-install'],
     notify  => [Exec['conda-env-create'], Exec['conda-env-update']],
   }
@@ -239,8 +239,8 @@ class jupyterhub::sharc-jupyterhub (
     refreshonly => true,
   }
   service { 'jupyterhub.service':
-    ensure    => running,
-    enable    => true,
+    ensure => running,
+    enable => true,
     # Do not restart JupyterHub service automatically if updated config/service files are deployed
     #subscribe => File[[
     #  "${jh_cfg_dir}/jupyterhub_config.py",
