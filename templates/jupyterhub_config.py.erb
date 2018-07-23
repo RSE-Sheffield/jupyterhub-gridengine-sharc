@@ -181,12 +181,19 @@ c.JupyterHub.ip = '0.0.0.0'
 ## The public facing port of the proxy
 c.JupyterHub.port = <%= @jh_public_port %>
 
-## The ip for the proxy API handlers
-c.JupyterHub.proxy_api_ip = '127.0.0.1'
 # We're running the proxy and host on the same machine
-
-## The port for the proxy API handlers
+<% if @is_devel_env -%>
+c.ConfigurableHTTPProxy.api_url = 'http://127.0.0.1:8001'
+<% else -%>
+# The ip and port for the proxy API handlers
+c.JupyterHub.proxy_api_ip = '127.0.0.1'
 c.JupyterHub.proxy_api_port = 8001
+<% end -%>
+
+<% if @is_devel_env -%>
+# Required with JupyterHub > 0.7.2 otherwise get perms issue when ConfigurableHTTPProxy tries to create this file
+c.ConfigurableHTTPProxy.pid_file = pjoin(runtime_dir, 'jupyterhub-proxy.pid')
+<% end -%>
 
 ## The Proxy Auth token.
 #

@@ -153,9 +153,9 @@ This class does the following:
   submit, query the state of and delete Grid Engine jobs 
   (using ``qsub``/``qstat``/``qdel``) 
   as any user without needing a password.  
-  ``sudo`` is also configured to pass through certain Grid Engine environment variables so that 
-  the Grid Engine commands know what is going on 
-  (``SGE_ROOT``, ``SGE_CELL``, ``SGE_EXECD_PORT``, ``SGE_QMASTER_PORT``, ``SGE_CLUSTER_NAME``, ``LANG``, ``JPY_API_TOKEN``);
+  ``sudo`` is also configured to `pass through certain Grid Engine environment variables <files/sharc-jupyterhub/jupyter-sudo>`__ so that 
+  the job and, via a custom JupyterHub session spawner, the single-user Jupyter server, 
+  is equipped with the various keys, paths and URLs required to communicate with JupyterHub.
 * Create directories specifically for JupyterHub:
 
   * ``/srv`` - for runtime data;
