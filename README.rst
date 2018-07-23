@@ -221,10 +221,10 @@ Manual cluster configuration
          cd path/to/clone/of/this/repo
 
          # The name of the conda environment we want to create
-         CONDA_ENV=jupyterhub
+         CONDA_ENV=jupyterhub  # or jupyterhub-dev
 
          # The packages (plus versions) that we want to install into this environment
-         CONDA_ENV_FILE=./jupyterhub.yml
+         CONDA_ENV_FILE=worker-conda-env.yml  # or worker-conda-env-dev.yml 
 
          # Does the conda environment already exist?
          if conda env list | grep -q -e "envs/${CONDA_ENV}\$"; then
