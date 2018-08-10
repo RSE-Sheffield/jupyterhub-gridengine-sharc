@@ -1,4 +1,4 @@
-class jupyterhub::sharc-jupyterhub (
+class jupyterhub::sharc_jupyterhub (
     $jh_admin_users,
     $jh_whitelist_users,
     $cluster_net_cidr,
@@ -69,7 +69,7 @@ class jupyterhub::sharc-jupyterhub (
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
-    source  => 'puppet:///modules/jupyterhub/sharc-jupyterhub/condarc',
+    source  => 'puppet:///modules/jupyterhub/sharc_jupyterhub/condarc',
     require => Exec['miniconda-install'],
   }
 
@@ -83,7 +83,7 @@ class jupyterhub::sharc-jupyterhub (
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
-    source  => "puppet:///modules/jupyterhub/sharc-jupyterhub/${conda_env}.yml",
+    source  => "puppet:///modules/jupyterhub/sharc_jupyterhub/${conda_env}.yml",
     require => Exec['miniconda-install'],
     notify  => [Exec['conda-env-create'], Exec['conda-env-update']],
   }
@@ -122,7 +122,7 @@ class jupyterhub::sharc-jupyterhub (
     mode    => '0640',
     owner   => 'root',
     group   => 'root',
-    source  => 'puppet:///modules/jupyterhub/sharc-jupyterhub/jupyter-sudo',
+    source  => 'puppet:///modules/jupyterhub/sharc_jupyterhub/jupyter-sudo',
     require => [ User['jupyter'], Group['jupyter'] ],
   }
 
@@ -262,7 +262,7 @@ class jupyterhub::sharc-jupyterhub (
 
   file { '/etc/nginx/nginx.conf':
     ensure  => file,
-    source  => 'puppet:///modules/jupyterhub/sharc-jupyterhub/nginx.conf',
+    source  => 'puppet:///modules/jupyterhub/sharc_jupyterhub/nginx.conf',
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
@@ -298,7 +298,7 @@ class jupyterhub::sharc-jupyterhub (
     mode    => '0644',
     owner   => 'root',
     group   => 'sysadmins',
-    source  => 'puppet:///modules/jupyterhub/sharc-jupyterhub/conda-root-upgrade.timer',
+    source  => 'puppet:///modules/jupyterhub/sharc_jupyterhub/conda-root-upgrade.timer',
     require => Service[ 'conda-root-upgrade.service'],
     notify  => Exec['systemd-daemon-reload'],
   }

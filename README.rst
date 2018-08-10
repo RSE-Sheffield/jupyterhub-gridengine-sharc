@@ -89,7 +89,7 @@ JupyterHub-specific Puppet classes
 
 There is also a jupyterhub-specific 
 Puppet module (``jupyterhub``) and 
-class (``jupyterhub::sharc-jupyterhub``), 
+class (``jupyterhub::sharc_jupyterhub``), 
 the source for which is defined here.
 
 This class has several parameters, 
@@ -153,7 +153,7 @@ This class does the following:
   submit, query the state of and delete Grid Engine jobs 
   (using ``qsub``/``qstat``/``qdel``) 
   as any user without needing a password.  
-  ``sudo`` is also configured to `pass through certain Grid Engine environment variables <files/sharc-jupyterhub/jupyter-sudo>`__ so that 
+  ``sudo`` is also configured to `pass through certain Grid Engine environment variables <files/sharc_jupyterhub/jupyter-sudo>`__ so that 
   the job and, via a custom JupyterHub session spawner, the single-user Jupyter server, 
   is equipped with the various keys, paths and URLs required to communicate with JupyterHub.
 * Create directories specifically for JupyterHub:
