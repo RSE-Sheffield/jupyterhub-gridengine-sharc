@@ -9,4 +9,4 @@ dependencies:
 - nb_conda_kernels=2.2.0
 - notebook=5.7.6
 - pip:
-  - sgespawner==0.2.3
+  - sgespawner==0.2.4
