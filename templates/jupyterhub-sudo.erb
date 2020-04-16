@@ -1,4 +1,4 @@
 Defaults:jupyter env_keep+="SGE_ROOT SGE_CELL SGE_EXECD_PORT SGE_QMASTER_PORT SGE_CLUSTER_NAME LANG JPY_API_TOKEN JUPYTERHUB_API_TOKEN JUPYTERHUB_CLIENT_ID JUPYTERHUB_HOST JUPYTERHUB_OAUTH_CALLBACK_URL JUPYTERHUB_USER JUPYTERHUB_API_URL JUPYTERHUB_BASE_URL JUPYTERHUB_SERVICE_PREFIX"
-jupyter        lysithea, sinope = (ALL) NOPASSWD: /usr/local/sge/live/bin/lx-amd64/qsub
-jupyter        lysithea, sinope = (ALL) NOPASSWD: /usr/local/sge/live/bin/lx-amd64/qstat
-jupyter        lysithea, sinope = (ALL) NOPASSWD: /usr/local/sge/live/bin/lx-amd64/qdel
+<% @sge_priv_cmds.each do |cmd| -%>
+<%= @jh_user -%>       lysithea, sinope = (ALL) NOPASSWD: <%= @sge_root -%>/bin/lx-amd64/<%= cmd %>
+<% end %>

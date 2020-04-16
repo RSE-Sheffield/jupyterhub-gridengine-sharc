@@ -1,7 +1,7 @@
 # vi:syntax=systemd
 [Unit]
-Description=JupyterHub
-Documentation=https://github.com/RSE-Sheffield/odk-jh-sge/
+Description=configurable-http-proxy
+Documentation=https://github.com/jupyterhub/configurable-http-proxy
 After=syslog.target network.target
 
 [Service]
@@ -9,29 +9,35 @@ After=syslog.target network.target
 Type=simple
 
 # Set the UNIX user or group that the processes are executed as
-User=<%= @jh_user %>
-Group=<%= @jh_group %>
+User=chproxy
+Group=chproxy
 
 #ExecStartPre=
-ExecStart=<%= @venv -%>/bin/jupyterhub --config=<%= @jh_cfg_dir -%>/jupyterhub_config.py 2>&1
+ExecStart=/usr/bin/configurable-http-proxy \
+    <% if @chproxy_pub_ip != "all" -%>--ip=<%= @chproxy_pub_ip -%><% end %> \
+    --port=<%= @chproxy_pub_port -%> \
+    --api-ip=<%= @chproxy_api_ip -%> \
+    --api-port=<%= @chproxy_api_port -%> \
+    --default-target=http://<%= @chproxy_default_target_host -%>:<%= @chproxy_default_target_port -%> \
+    --error-target=http://<%= @chproxy_default_target_host -%>:<%= @chproxy_default_target_port -%>/hub/error
 Restart=no
 #ExecStop=
 #ExecReload=
 
 # Environment variables for executed processes
-Environment="<%= @venv -%>/bin:<%= @sge_root -%>/bin/lx-amd64:/usr/local/bin:/usr/bin"
-Environment="SGE_ROOT=<%= @sge_root -%>"
-Environment="SGE_CLUSTER_NAME=sharc"
+Environment="CONFIGPROXY_AUTH_TOKEN=<%= @chproxy_auth_token -%>"
+
+ProtectSystem=yes
 
 # Mount /usr, /boot and /etc read-only, except for the API file system
 # subtrees /dev, /proc and /sys
-ProtectSystem=full
+#ProtectSystem=full
 
 # Ideally we'd use 'ProtectHome=yes' to make /home, /root and /run/user inaccessible and
 # empty to this service; however, qsub would then fail as it would annoyingly error when trying
 # to read '$HOME/.sge_aliases'.  An alternative would be 'ProtectHome=read-only' but this
 # prevents us from writing error logs to users' home directories.  We therefore need:
-ProtectHome=no
+#ProtectHome=no
 
 # Sets up a new file system namespace for the executed processes and mounts
 # private /tmp and /var/tmp directories inside it that is not shared by

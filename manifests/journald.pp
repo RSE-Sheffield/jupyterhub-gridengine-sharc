@@ -20,7 +20,7 @@ class jupyterhub::journald {
     mode    => '0644',
     owner   => 'root',
     group   => 'root',
-    source  => 'puppet:///modules/jupyterhub/sharc_jupyterhub/journald-persistence.conf',
+    source  => 'puppet:///modules/jupyterhub/jupyterhub/journald-persistence.conf',
     require => File['/etc/systemd/journald.conf.d'],
     notify  => Service['systemd-journald'],
   }
