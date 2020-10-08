@@ -17,7 +17,9 @@ class jupyterhub::configurable_http_proxy (
   $rpm_pkgs = [ 'epel-release', 'npm' ]
   package { $rpm_pkgs: }
 
-  # Ensure configurable-http-proxy installed using npm
+  # Ensure configurable-http-proxy installed using npm.
+  # Installs into /usr/lib/node_modules/configurable-http-proxy/
+  # and creates /usr/bin/configurable-http-proxy symlink.
   exec { 'install-chproxy':
     command => "/usr/bin/npm install -g configurable-http-proxy@${chproxy_vers}",
     path    => [ '/bin', '/usr/bin' ],
