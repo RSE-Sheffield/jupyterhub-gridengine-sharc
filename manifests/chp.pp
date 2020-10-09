@@ -3,7 +3,7 @@
 # See: https://jupyterhub.readthedocs.io/en/stable/reference/separate-proxy.html
 class jupyterhub::chp (
     $chp_auth_token,
-    $chp_vers = '4.2.1',
+    $chp_maj_min_vers = '4.2',
     $chp_pub_port = 8000,
     $chp_pub_ip = 'all',
     $chp_api_port = 8001,
@@ -12,19 +12,32 @@ class jupyterhub::chp (
     $chp_default_target_port = 8081,
   ) {
 
-  # Ensure npm installed
-  Package { ensure => 'installed' }
-  $rpm_pkgs = [ 'epel-release', 'npm' ]
-  package { $rpm_pkgs: }
+  # Ensure nodejs and npm are installed
+  include jupyterhub::nodejs
 
-  # Ensure configurable-http-proxy installed using npm.
-  # Installs into /usr/lib/node_modules/configurable-http-proxy/
-  # and creates /usr/bin/configurable-http-proxy symlink.
+  # Install prefix for configurable-http-proxy
+  file { '/opt/chp':
+    ensure => 'directory',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
+  # Install from package.json definition, _not_ using 'npm install -g ...',
+  # as this way we can run 'npm audit' for vuln checking
+  file { '/opt/chp/package.json':
+    source  => 'directory',
+    content => template('jupyterhub/chp-package.json.erb'),
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    require => File['/opt/chp'],
+  }
   exec { 'install-chp':
-    command => "/usr/bin/npm install -g configurable-http-proxy@${chp_vers}",
-    path    => [ '/bin', '/usr/bin' ],
-    require => Package['npm'],
-    creates => '/usr/lib/node_modules/configurable-http-proxy/bin/configurable-http-proxy',
+    command => '/usr/bin/npm install',
+    cwd     => '/opt/chp',
+    require => File['/opt/chp/package.json'],
+    unless  => "/usr/bin/npm list --depth=0 | grep @${chp_maj_min_vers}",
   }
 
   # Group and user to run service as
@@ -62,8 +75,8 @@ class jupyterhub::chp (
     path        => [ '/bin', '/usr/bin' ],
     refreshonly => true,
   }
-  service { 'jupyterhub.service':
+  service { 'chp.service':
     ensure => running,
     enable => true,
   }
-  }
+}
