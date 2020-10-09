@@ -9,23 +9,23 @@ After=syslog.target network.target
 Type=simple
 
 # Set the UNIX user or group that the processes are executed as
-User=chproxy
-Group=chproxy
+User=chp
+Group=chp
 
 #ExecStartPre=
 ExecStart=/usr/bin/configurable-http-proxy \
-    <% if @chproxy_pub_ip != "all" -%>--ip=<%= @chproxy_pub_ip -%><% end %> \
-    --port=<%= @chproxy_pub_port -%> \
-    --api-ip=<%= @chproxy_api_ip -%> \
-    --api-port=<%= @chproxy_api_port -%> \
-    --default-target=http://<%= @chproxy_default_target_host -%>:<%= @chproxy_default_target_port -%> \
-    --error-target=http://<%= @chproxy_default_target_host -%>:<%= @chproxy_default_target_port -%>/hub/error
+    <% if @chp_pub_ip != "all" -%>--ip=<%= @chp_pub_ip -%><% end %> \
+    --port=<%= @chp_pub_port -%> \
+    --api-ip=<%= @chp_api_ip -%> \
+    --api-port=<%= @chp_api_port -%> \
+    --default-target=http://<%= @chp_default_target_host -%>:<%= @chp_default_target_port -%> \
+    --error-target=http://<%= @chp_default_target_host -%>:<%= @chp_default_target_port -%>/hub/error
 Restart=no
 #ExecStop=
 #ExecReload=
 
 # Environment variables for executed processes
-Environment="CONFIGPROXY_AUTH_TOKEN=<%= @chproxy_auth_token -%>"
+EnvironmentFile=/etc/default/chp
 
 ProtectSystem=yes
 
